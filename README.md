@@ -1,16 +1,19 @@
 # Train a custom YOLOv3-tiny model and run it with a Raspberry Pi on an Intel Neural Compute Stick 2 
 yes, this is a long title.
 
-Hardware used in this guide:
+# Environment
+Hardware:
+- PC (with CUDA enabled GPU)
 - Raspberry Pi 3 B+
 - Intel Neural Compute Stick 2
 
-Software used in this guide:
-- Ubuntu 18.04
+Software:
+- Ubuntu 18.04.02 LTS
 - Nvidia CUDA 10.1
 - OpenVINO Toolkit 2019 R1.01
 - Darknet 61c9d02 - Sep 14, 2018
 - Raspbian Stretch Lite - version April 2019
+- Python 3.5
 
 
 # Clone this repository
@@ -64,7 +67,7 @@ sudo apt-get install build-essential
 ```
 
 
-# Download and install OpenVINO.
+# Download and install OpenVINO
 
 Note: You need to register to download the OpenVINO Toolkit. In my case the registration form was broken. Here's a direct download link for Linux (version 2019 R1.0.1):
 http://registrationcenter-download.intel.com/akdlm/irc_nas/15461/l_openvino_toolkit_p_2019.1.133.tgz
@@ -83,7 +86,13 @@ To run the model on the Intel Neural Compute Stick 2, we need to convert it to a
 There's no need to follow the official guide if you use the instructions below. But for reference, it can be found here:
 https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_YOLO_From_Tensorflow.html
 
-**Step 1: Dump YOLOv3 TenorFlow Model**
+## Option 1: using the convert.sh script
+
+Instead of running the 2 steps below, you can run the script in this repo: `sh convert.sh`
+
+## Option 2: Convert model manually
+
+**Dump YOLOv3 TenorFlow Model:**
 
 For this step you need to install tensorflow:
 `pip3 install tensorflow`
@@ -96,13 +105,12 @@ python3 tensorflow-yolo-v3/convert_weights_pb.py --class_names signals.names --d
 
 The TensorFlow model is saved as `frozen_darknet_yolov3_model.pb`
 
-**Step 2: Convert YOLOv3 TensorFlow Model to the IR**
-
-In the root of this repository run:
+**Convert YOLOv3 TensorFlow Model to the IR:**
 
 ```
-python3 /opt/intel/openvino_2019.1.133/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config yolo_v3_tiny.json --input_shape [1,416,416,3]
+python3 /opt/intel/openvino_2019.1.133/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config yolo_v3_tiny_custom.json --input_shape [1,416,416,3]
 ```
+The `--input_shape` parameter is needed as otherwise it blows up due to getting -1 for the mini-batch size. Forcing this to 1 solves the problem.
 
 The IR is generated and saved as `frozen_darknet_yolov3_model.xml` and `frozen_darknet_yolov3_model.bin`.
 

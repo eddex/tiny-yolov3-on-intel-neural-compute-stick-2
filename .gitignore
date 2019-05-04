@@ -1,5 +1,7 @@
+# YOLOv3 model files
 *.mapping
 *.weights
 *.bin
 *.xml
 *.pb
+
