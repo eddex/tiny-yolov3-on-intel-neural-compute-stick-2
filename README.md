@@ -1,1 +1,122 @@
-Train a tiny-YOLOv3 model and run it with a Raspberry Pi on an Intel Neural Compute Stick 2 
+# Train a custom YOLOv3-tiny model and run it with a Raspberry Pi on an Intel Neural Compute Stick 2 
+yes, this is a long title.
+
+Hardware used in this guide:
+- Raspberry Pi 3 B+
+- Intel Neural Compute Stick 2
+
+Software used in this guide:
+- Ubuntu 18.04
+- Nvidia CUDA 10.1
+- OpenVINO Toolkit 2019 R1.01
+- Darknet 61c9d02 - Sep 14, 2018
+- Raspbian Stretch Lite - version April 2019
+
+
+# Clone this repository
+
+To simplify things, this repository contains all other necessary git repositories as submodules. To clone them together with this repository use:
+
+`git clone --recurse-submodules https://github.com/eddex/tiny-yolov3-on-intel-neural-compute-stick-2.git`
+
+Note: You can also download the repositories seperately in later steps.
+
+
+# Install CUDA
+
+To use your graphics card when training the custom YOLOv3-tiny model, install CUDA.
+
+How to: 
+[Install CUDA 10.1 on Ubuntu 18.04](https://gist.github.com/eddex/707f9cbadfaec9d419a5dfbcc2042611#file-install-cuda-10-1-on-ubuntu-18-04-md)
+
+
+# Download darknet
+
+If you haven't downloaded the submodules, clone https://github.com/pjreddie/darknet
+
+`git clone https://github.com/pjreddie/darknet.git`
+
+
+# Train custom YOLOv3-tiny model
+
+navigate to the darknet repo: `cd darknet`
+
+**Enable training on GPU (requires CUDA)**
+
+open the file `Makefile` in your prefered text editor and set `GPU=1` and `OPENMP=1`.
+
+```
+GPU=1
+CUDNN=0
+OPENCV=0
+OPENMP=1
+DEBUG=0
+```
+
+**Build darknet**
+
+In the darknet directory, run `make`.
+
+Requires build-essential:
+```
+sudo apt-get update
+sudo apt-get install build-essential
+```
+
+
+# Download and install OpenVINO.
+
+Note: You need to register to download the OpenVINO Toolkit. In my case the registration form was broken. Here's a direct download link for Linux (version 2019 R1.0.1):
+http://registrationcenter-download.intel.com/akdlm/irc_nas/15461/l_openvino_toolkit_p_2019.1.133.tgz
+
+Then follow the official installation guide:
+
+Note: Setting the environment variables might not work. This is not a problem. We'll use absolute paths where needed in the steps below.
+
+https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html#install-openvino
+
+
+# Convert YOLOv3-tiny model to Intermediate Representation (IR)
+
+To run the model on the Intel Neural Compute Stick 2, we need to convert it to an "Intermediate Representation".
+
+There's no need to follow the official guide if you use the instructions below. But for reference, it can be found here:
+https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_YOLO_From_Tensorflow.html
+
+**Step 1: Dump YOLOv3 TenorFlow Model**
+
+For this step you need to install tensorflow:
+`pip3 install tensorflow`
+
+then run:
+
+```
+python3 tensorflow-yolo-v3/convert_weights_pb.py --class_names signals.names --data_format NHWC --weights_file yolov3-tiny-signals.weights --tiny
+```
+
+The TensorFlow model is saved as `frozen_darknet_yolov3_model.pb`
+
+**Step 2: Convert YOLOv3 TensorFlow Model to the IR**
+
+In the root of this repository run:
+
+```
+python3 /opt/intel/openvino_2019.1.133/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config yolo_v3_tiny.json --input_shape [1,416,416,3]
+```
+
+The IR is generated and saved as `frozen_darknet_yolov3_model.xml` and `frozen_darknet_yolov3_model.bin`.
+
+
+# Setup Raspberry Pi
+
+This section decribes how to setup and configure a Raspberry Pi 3 B+ to run the YOLOv3-tiny model on the Intel Neural Compute Stick 2.
+
+## Install and configure Raspbian Stretch Lite
+- TODO
+
+## Setup OpenVINO Toolkit on Raspberry Pi
+
+Follow the instruction in the official guide (v 2019 R1.01): https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_raspbian.html
+
+## Copy IR model to Raspberry Pi and run it
+- TODO
