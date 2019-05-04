@@ -14,7 +14,7 @@ yolo_scale_52 = 52
 
 classes = 7
 coords = 4
-num = 3
+num = 6
 anchors = [10,14, 23,27, 37,58, 81,82, 135,169, 344,319]
 
 LABELS = ("info-3", "info-9", "info-4", "stop-5", "stop-2", "stop-9", "info-1")
