@@ -165,5 +165,9 @@ And run the python script **on the Raspberry Pi**:
 ```
 python3 openvino_tiny-yolov3_test.py -d MYRIAD
 ```
+or
+```
+python3 openvino_tiny-yolov3_MultiStick_test.py -numncs 1
+```
 
 For reference, the original python script can be found here: https://github.com/PINTO0309/OpenVINO-YoloV3
