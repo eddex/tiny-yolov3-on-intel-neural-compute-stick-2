@@ -20,7 +20,9 @@ Software:
 
 To simplify things, this repository contains all other necessary git repositories as submodules. To clone them together with this repository use:
 
-`git clone --recurse-submodules https://github.com/eddex/tiny-yolov3-on-intel-neural-compute-stick-2.git`
+```
+git clone --recurse-submodules https://github.com/eddex/tiny-yolov3-on-intel-neural-compute-stick-2.git
+```
 
 Note: You can also download the repositories seperately in later steps.
 
@@ -40,7 +42,7 @@ If you haven't downloaded the submodules, clone https://github.com/pjreddie/dark
 `git clone https://github.com/pjreddie/darknet.git`
 
 
-# Train custom YOLOv3-tiny model
+# Train custom YOLOv3-tiny model with darknet
 
 navigate to the darknet repo: `cd darknet`
 
@@ -58,7 +60,10 @@ DEBUG=0
 
 **Build darknet**
 
-In the darknet directory, run `make`.
+```
+cd darknet
+make
+```
 
 Requires build-essential:
 ```
@@ -66,6 +71,8 @@ sudo apt-get update
 sudo apt-get install build-essential
 ```
 
+**Train a custom model based on YOLOv3-tiny**
+- TODO
 
 # Download and install OpenVINO
 
@@ -74,7 +81,7 @@ http://registrationcenter-download.intel.com/akdlm/irc_nas/15461/l_openvino_tool
 
 Then follow the official installation guide:
 
-Note: Setting the environment variables might not work. This is not a problem. We'll use absolute paths where needed in the steps below.
+Note: When using `fish` instead of `bash`, setting the environment variables might not work. This is not a problem. We'll use absolute paths where needed in the steps below.
 
 https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_linux.html#install-openvino
 
@@ -88,14 +95,20 @@ https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_
 
 ## Option 1: using the convert.sh script
 
-Instead of running the 2 steps below, you can run the script in this repo: `sh convert.sh`
+Instead of running the 2 steps below, you can run the script in this repo: 
+
+```
+sh convert.sh
+```
 
 ## Option 2: Convert model manually
 
-**Dump YOLOv3 TenorFlow Model:**
+**Dump YOLOv3 TensorFlow Model:**
 
 For this step you need to install tensorflow:
-`pip3 install tensorflow`
+```
+pip3 install tensorflow
+```
 
 then run:
 
@@ -122,9 +135,32 @@ This section decribes how to setup and configure a Raspberry Pi 3 B+ to run the 
 ## Install and configure Raspbian Stretch Lite
 - TODO
 
+
 ## Setup OpenVINO Toolkit on Raspberry Pi
 
 Follow the instruction in the official guide (v 2019 R1.01): https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_raspbian.html
 
-## Copy IR model to Raspberry Pi and run it
-- TODO
+
+## Copy IR model to Raspberry Pi and run it using Python
+
+Install dependencies (can take quite long):
+```
+apt update
+apt install python3-pip
+pip3 install opencv-python
+apt install libgtk-3-dev
+```
+
+At this point there should be an **Intel Neural Compute Stick 2** and a **camera** connected to the Raspberry Pi. The camera can be a PyCam or any USB Webcam that can be detected by OpenCV.
+
+Copy the files `openvino_tiny-yolov3_test.py`, `frozen_darknet_yolov3_model.xml` and `frozen_darknet_yolov3_model.bin` to the Raspberry Pi:
+```
+scp openvino_tiny-yolov3_test.py pi@192.168.1.162:~/openvino-python/
+scp frozen_darknet_yolov3_model.xml pi@192.168.1.162:~/openvino-python/
+scp frozen_darknet_yolov3_model.bin pi@192.168.1.162:~/openvino-python/
+```
+
+And run the python script **on the Raspberry Pi**:
+```
+python3 openvino_tiny-yolov3_test.py -d MYRIAD
+```
