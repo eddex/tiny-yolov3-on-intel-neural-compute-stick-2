@@ -1,0 +1,1 @@
+Train a tiny-YOLOv3 model and run it with a Raspberry Pi on an Intel Neural Compute Stick 2 
