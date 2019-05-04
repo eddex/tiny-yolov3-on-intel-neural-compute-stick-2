@@ -1,0 +1,5 @@
+*.mapping
+*.weights
+*.bin
+*.xml
+*.pb
