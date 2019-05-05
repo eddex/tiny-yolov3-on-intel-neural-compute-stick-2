@@ -108,8 +108,10 @@ sh convert.sh
 
 For this step you need to install tensorflow:
 ```
-pip3 install tensorflow
+pip3 install tensorflow==1.12.2
 ```
+IMPORTANT: The correct version of tensorflow has to be used, otherwise the conversion goes wrong! 1.12.2 works. >=1.13.0 does not work.
+See: https://software.intel.com/en-us/forums/computer-vision/topic/807383
 
 then run:
 
@@ -125,6 +127,8 @@ The TensorFlow model is saved as `frozen_darknet_yolov3_model.pb`
 python3 /opt/intel/openvino_2019.1.133/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config yolo_v3_tiny_custom.json --input_shape [1,416,416,3]
 ```
 The `--input_shape` parameter is needed as otherwise it blows up due to getting -1 for the mini-batch size. Forcing this to 1 solves the problem.
+
+The original `yolo_v3_tiny.json` can be found in `<OPENVINO_INSTALL_DIR>/deployment_tools/model_optimizer/extensions/front/tf/`.
 
 The IR is generated and saved as `frozen_darknet_yolov3_model.xml` and `frozen_darknet_yolov3_model.bin`.
 
