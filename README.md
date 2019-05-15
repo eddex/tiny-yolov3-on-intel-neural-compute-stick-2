@@ -124,9 +124,11 @@ The TensorFlow model is saved as `frozen_darknet_yolov3_model.pb`
 **Convert YOLOv3 TensorFlow Model to the IR:**
 
 ```
-python3 /opt/intel/openvino_2019.1.133/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config yolo_v3_tiny_custom.json --input_shape [1,416,416,3]
+python3 /opt/intel/openvino_2019.1.133/deployment_tools/model_optimizer/mo_tf.py --input_model frozen_darknet_yolov3_model.pb --tensorflow_use_custom_operations_config yolo_v3_tiny_custom.json --input_shape [1,416,416,3] --data_type FP16
 ```
 The `--input_shape` parameter is needed as otherwise it blows up due to getting -1 for the mini-batch size. Forcing this to 1 solves the problem.
+
+To run the model on a MYRIAD processor (Intel Compute Stick 2), the parameter `--data_type FP16` has to be passed.
 
 The original `yolo_v3_tiny.json` can be found in `<OPENVINO_INSTALL_DIR>/deployment_tools/model_optimizer/extensions/front/tf/`.
 
