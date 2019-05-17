@@ -177,3 +177,11 @@ python3 openvino_tiny-yolov3_MultiStick_test.py -numncs 1
 ```
 
 For reference, the original python script can be found here: https://github.com/PINTO0309/OpenVINO-YoloV3
+
+### Run examples on on CPU
+
+To run the examples on the CPU on UBUNTU, add the following to your `~/.bashrc` file.
+```
+export PATH="/opt/intel/openvino/deployment_tools/inference_engine/lib/intel64/:$PATH"
+```
+If you get an error that `lib/libcpu_extension.so` if not found, change the line referencing the file to `libcpu_extension_sse4.so` (remove `lib/`!)
