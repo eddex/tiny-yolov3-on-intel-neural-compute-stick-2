@@ -147,6 +147,16 @@ This section decribes how to setup and configure a Raspberry Pi 3 B+ to run the 
 
 Follow the instruction in the official guide (v 2019 R1.01): https://docs.openvinotoolkit.org/latest/_docs_install_guides_installing_openvino_raspbian.html
 
+Maybe it's necessary to add the inference engine libraries to the PATH. Add this to the bottom of ~/.bashrc
+
+```
+export PATH=$PATH:/opt/intel/openvino/inference_engine/lib
+```
+Maybe you need to add this to the top of your python scripts:
+```
+sys.path.insert(0, '/opt/intel/openvino/python/python3.5')
+```
+
 
 ## Copy IR model to Raspberry Pi and run it using Python
 
