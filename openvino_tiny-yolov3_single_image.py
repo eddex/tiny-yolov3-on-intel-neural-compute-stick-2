@@ -160,9 +160,9 @@ def main_IE_infer():
     #print("videosFrameCount =", str(frame_count))
     #print("videosFPS =", str(vidfps))
 
-    img = cv2.imread("images/5-1.jpg")
-    #cam = cv2.VideoCapture(0)
-    #s, img = cam.read()
+    #img = cv2.imread("images/5-1.jpg")
+    cam = cv2.VideoCapture(0)
+    s, img = cam.read()
 
     time.sleep(1)
 

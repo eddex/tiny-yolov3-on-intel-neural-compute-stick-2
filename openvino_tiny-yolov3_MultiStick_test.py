@@ -178,7 +178,7 @@ def camThread(LABELS, results, frameBuffer, camera_width, camera_height, vidfps)
         else:
             if not isinstance(lastresults, type(None)):
                 for obj in lastresults:
-                    if obj.confidence < 0.02:
+                    if obj.confidence < 0.2:
                         continue
                     label = obj.class_id
                     confidence = obj.confidence
