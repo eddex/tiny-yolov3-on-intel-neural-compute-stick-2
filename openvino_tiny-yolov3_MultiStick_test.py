@@ -14,7 +14,7 @@ yolo_scale_52 = 52
 
 classes = 7
 coords = 4
-num = 6
+num = 3
 anchors = [10,14, 23,27, 37,58, 81,82, 135,169, 344,319]
 
 LABELS = ("info-3", "info-9", "info-4", "stop-5", "stop-2", "stop-9", "info-1")
@@ -178,11 +178,12 @@ def camThread(LABELS, results, frameBuffer, camera_width, camera_height, vidfps)
         else:
             if not isinstance(lastresults, type(None)):
                 for obj in lastresults:
-                    if obj.confidence < 0.2:
+                    if obj.confidence < 0.02:
                         continue
                     label = obj.class_id
                     confidence = obj.confidence
                     if confidence > 0.2:
+                        print(LABELS[obj.class_id], obj.confidence, "%")
                         label_text = LABELS[label] + " (" + "{:.1f}".format(confidence * 100) + "%)"
                         cv2.rectangle(color_image, (obj.xmin, obj.ymin), (obj.xmax, obj.ymax), box_color, box_thickness)
                         cv2.putText(color_image, label_text, (obj.xmin, obj.ymin - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, label_text_color, 1)
@@ -231,8 +232,8 @@ class NcsWorker(object):
     def __init__(self, devid, frameBuffer, results, camera_width, camera_height, number_of_ncs, vidfps):
         self.devid = devid
         self.frameBuffer = frameBuffer
-        self.model_xml = "./frozen_darknet_yolov3_model.xml"
-        self.model_bin = "./frozen_darknet_yolov3_model.bin"
+        self.model_xml = "./frozen_darknet_yolov3_model_signals_tensorflow1.12.2.xml"
+        self.model_bin = "./frozen_darknet_yolov3_model_signals_tensorflow1.12.2.bin"
         self.camera_width = camera_width
         self.camera_height = camera_height
         self.m_input_size = 416
@@ -348,8 +349,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     number_of_ncs = args.number_of_ncs
-    camera_width = 320
-    camera_height = 240
+    camera_width = 1280
+    camera_height = 960
     vidfps = 30
 
     try:

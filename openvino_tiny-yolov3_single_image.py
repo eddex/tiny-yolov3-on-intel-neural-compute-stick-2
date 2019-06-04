@@ -144,7 +144,7 @@ def main_IE_infer():
     args = build_argparser().parse_args()
     #model_xml = "lrmodels/tiny-YoloV3/FP32/frozen_tiny_yolo_v3.xml" #<--- CPU
     #model_xml = "lrmodels/tiny-YoloV3/FP16/frozen_tiny_yolo_v3.xml" #<--- MYRIAD
-    model_xml = "frozen_darknet_yolov3_model_signals_tensorflow1.12.2.xml"
+    model_xml = "frozen_darknet_yolov3_tiny_model_CPU.xml"
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
 
 #    cap = cv2.VideoCapture(0)
@@ -160,15 +160,15 @@ def main_IE_infer():
     #print("videosFrameCount =", str(frame_count))
     #print("videosFPS =", str(vidfps))
 
-    #img = cv2.imread("images/5-1.jpg")
-    cam = cv2.VideoCapture(0)
-    s, img = cam.read()
+    img = cv2.imread("images/5-1.jpg")
+    #cam = cv2.VideoCapture(0)
+    #s, img = cam.read()
 
     time.sleep(1)
 
     plugin = IEPlugin(device=args.device)
     if "CPU" in args.device:
-        plugin.add_cpu_extension("lib/libcpu_extension.so")
+        plugin.add_cpu_extension("libcpu_extension_sse4.so")
     net = IENetwork(model=model_xml, weights=model_bin)
     input_blob = next(iter(net.inputs))
     exec_net = plugin.load(network=net)
