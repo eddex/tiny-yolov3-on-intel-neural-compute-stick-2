@@ -4,3 +4,6 @@
 [submodule "darknet"]
 	path = darknet
 	url = git@github.com:AlexeyAB/darknet.git
+[submodule "signals-dataset"]
+	path = signals-dataset
+	url = https://github.com/eddex/signals-dataset
