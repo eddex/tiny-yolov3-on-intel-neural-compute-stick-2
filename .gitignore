@@ -5,3 +5,6 @@
 *.xml
 *.pb
 
+# editor
+.vscode/
+
