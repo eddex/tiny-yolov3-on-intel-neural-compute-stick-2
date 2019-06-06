@@ -38,9 +38,9 @@ How to:
 
 # Download darknet
 
-If you haven't downloaded the submodules, clone https://github.com/pjreddie/darknet
+If you haven't downloaded the submodules, clone https://github.com/AlexeyAB/darknet
 
-`git clone https://github.com/pjreddie/darknet.git`
+`git clone git@github.com:AlexeyAB/darknet.git`
 
 
 # Train custom YOLOv3-tiny model with darknet
@@ -54,26 +54,75 @@ open the file `Makefile` in your prefered text editor and set `GPU=1` and `OPENM
 ```
 GPU=1
 CUDNN=0
+CUDNN_HALF=0
 OPENCV=0
+AVX=0
 OPENMP=1
-DEBUG=0
+LIBSO=0
+ZED_CAMERA=0
 ```
 
 **Build darknet**
 
-```
-cd darknet
-make
-```
-
-Requires build-essential:
+Install build-essential:
 ```
 sudo apt-get update
 sudo apt-get install build-essential
 ```
+Build:
+```
+make
+```
+Note: When using `fish` instead of `bash`, the build might fail. Just use bash in this case.
 
 **Train a custom model based on YOLOv3-tiny**
-- TODO
+
+Copy the config files to the `darknet/` directory:
+```
+cp signals.names darknet/
+cp signals.data darknet/
+cp yolov3-tiny-signals.cfg darknet/
+```
+The config files in this repo are altered to fit the signals-dataset. To train a model on another dataset, follow the instructions here:
+https://github.com/AlexeyAB/darknet#how-to-train-to-detect-your-custom-objects
+
+Navigate to the signals-dataset folder and run the script to create a train/test split of the data.
+```
+cd signals-dataset
+python3 create_train_test_split.py
+```
+This should generate a directory called `yolov3` along with two files `train.txt` and `test.txt`.
+
+Copy the directory and the two text files to the darknet directory:
+```
+cp signals-dataset/train.txt darknet/
+cp signals-dataset/test.txt darknet/
+cp -r signals-dataset/yolov3 darknet/
+```
+
+Download the pre-trained weights file:
+```
+cd darknet
+wget https://pjreddie.com/media/files/yolov3-tiny.weights
+```
+Get pre-trained weights for convolutional layers (`./darknet` is the binary inside the `darknet/` directory):
+```
+./darknet partial cfg/yolov3-tiny.cfg yolov3-tiny.weights yolov3-tiny.conv.15 15
+```
+
+Start training:
+
+```
+./darknet detector train signals.data yolov3-tiny-signals.cfg yolov3-tiny.conv.15
+```
+To show mAP data after every 1000 batches (1 iteration) start training with the `-map` flag.
+```
+./darknet detector train signals.data yolov3-tiny-signals.cfg yolov3-tiny.conv.15 -map
+```
+The trained model is saved in `darknet/backup/` as `.weights` file for every iteration.
+
+# Analyze mAP for models
+...
 
 # Download and install OpenVINO
 
