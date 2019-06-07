@@ -115,14 +115,17 @@ Start training:
 ```
 ./darknet detector train signals.data yolov3-tiny-signals.cfg yolov3-tiny.conv.15
 ```
-To show mAP data after every 1000 batches (1 iteration) start training with the `-map` flag.
+To calculate mean average precision after every 1000 batches (1 iteration) start training with the `-map` flag.
 ```
 ./darknet detector train signals.data yolov3-tiny-signals.cfg yolov3-tiny.conv.15 -map
 ```
 The trained model is saved in `darknet/backup/` as `.weights` file for every iteration.
 
-# Analyze mAP for models
-...
+# Analyze mean average precision (mAP) for models
+Run the script to export the mAP data:
+```
+python3 calculate_map.py
+```
 
 # Download and install OpenVINO
 
