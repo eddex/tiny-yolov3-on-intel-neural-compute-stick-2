@@ -134,6 +134,8 @@ You can also manually check the mAP of a `.weights` file:
 ./darknet detector map signals.data yolov3-tiny-signals.cfg backup/yolov3-tiny-signals_final.weights
 ```
 
+After exporting the data you can visualize it using the `create_diagrams_from_mAP_data.ipynb` jupyter notebook.
+
 
 # Test the model visually
 Run the following command. it will then prompt you for a path to an image. Enter the path of an image in the test-set (or any other image)
