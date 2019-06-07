@@ -119,13 +119,28 @@ To calculate mean average precision after every 1000 batches (1 iteration) start
 ```
 ./darknet detector train signals.data yolov3-tiny-signals.cfg yolov3-tiny.conv.15 -map
 ```
-The trained model is saved in `darknet/backup/` as `.weights` file for every iteration.
+The trained model is saved in `darknet/backup/` as `.weights` file for every iteration. When using `-map`, the model with the highets precision is saved as `..._best.weights`.
+
 
 # Analyze mean average precision (mAP) for models
 Run the script to export the mAP data:
 ```
 python3 calculate_map.py
 ```
+The script creates a `.map` file for each `.weights` file (excluding best, final and last since they would be redundant).
+
+You can also manually check the mAP of a `.weights` file:
+```
+./darknet detector map signals.data yolov3-tiny-signals.cfg backup/yolov3-tiny-signals_final.weights
+```
+
+
+# Test the model visually
+Run the following command. it will then prompt you for a path to an image. Enter the path of an image in the test-set (or any other image)
+``` 
+./darknet detector test signals.data yolov3-tiny-signals.cfg backup/yolov3-tiny-signals_best.weights
+```
+
 
 # Download and install OpenVINO
 
