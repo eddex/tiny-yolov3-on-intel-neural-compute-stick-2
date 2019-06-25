@@ -163,16 +163,6 @@ To run the model on the Intel Neural Compute Stick 2, we need to convert it to a
 There's no need to follow the official guide if you use the instructions below. But for reference, it can be found here:
 https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_YOLO_From_Tensorflow.html
 
-## Option 1: using the convert.sh script
-
-Instead of running the 2 steps below, you can run the script in this repo: 
-
-```
-sh convert.sh
-```
-
-## Option 2: Convert model manually
-
 **Dump YOLOv3 TensorFlow Model:**
 
 For this step you need to install tensorflow:
@@ -209,7 +199,28 @@ The IR is generated and saved as `frozen_darknet_yolov3_model.xml` and `frozen_d
 This section decribes how to setup and configure a Raspberry Pi 3 B+ to run the YOLOv3-tiny model on the Intel Neural Compute Stick 2.
 
 ## Install and configure Raspbian Stretch Lite
-- TODO
+- Download Raspbian Stretch Lite from https://www.raspberrypi.org/downloads/raspbian/
+- Install the OS on an SD card (using https://www.balena.io/etcher/)
+- Create a file called `ssh` in the root of the `boot` partition of the SD card.
+- Create a file called `wpa_supplicant.conf` in the `boot` partition of the SD card.
+- Make sure to change the “End of Line” setting set to “UNIX” for both files!
+- In `wpa_supplicant.conf` add the following content:
+```
+update_config=1
+ctrl_interface=/var/run/wpa_supplicant
+
+network={
+  scan_ssid=1
+  ssid="MyNetworkSSID"
+  psk="MyNetworkPassword"
+}
+```
+
+
+find Raspberry PI in local network:
+```
+sudo nmap -sP 192.168.1.0/24 | awk '/^Nmap/{ip=$NF}/B8:27:EB/{print ip}'
+```
 
 
 ## Setup OpenVINO Toolkit on Raspberry Pi
