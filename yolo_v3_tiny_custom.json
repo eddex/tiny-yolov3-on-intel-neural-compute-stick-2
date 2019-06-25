@@ -3,8 +3,8 @@
     "id": "TFYOLOV3",
     "match_kind": "general",
     "custom_attributes": {
-      "classes": 7,
-      "anchors": [10, 14, 23, 27, 37, 58, 81, 82, 135, 169, 344, 319],
+      "classes": 10,
+      "anchors": [7, 13,  10, 19,  14, 24,  16, 31,  16, 52,  22, 40,  27, 54,  41, 57,  74, 75],
       "coords": 4,
       "num": 3,
       "mask": [0, 1, 2],
