@@ -12,12 +12,22 @@ yolo_scale_13 = 13
 yolo_scale_26 = 26
 yolo_scale_52 = 52
 
-classes = 7
+classes = 10
 coords = 4
 num = 3
-anchors = [10,14, 23,27, 37,58, 81,82, 135,169, 344,319]
+anchors = [7, 13,  10, 19,  14, 24,  16, 31,  16, 52,  22, 40,  27, 54,  41, 57,  74, 75]
 
-LABELS = ("info-3", "info-9", "info-4", "stop-5", "stop-2", "stop-9", "info-1")
+LABELS = (
+    "signal-1",
+    "signal-2",
+    "signal-3",
+    "signal-4",
+    "signal-5",
+    "signal-6",
+    "signal-7",
+    "signal-8",
+    "signal-9",
+    "signal-start")
 
 label_text_color = (255, 255, 255)
 label_background_color = (125, 175, 75)
@@ -144,7 +154,7 @@ def main_IE_infer():
     args = build_argparser().parse_args()
     #model_xml = "lrmodels/tiny-YoloV3/FP32/frozen_tiny_yolo_v3.xml" #<--- CPU
     #model_xml = "lrmodels/tiny-YoloV3/FP16/frozen_tiny_yolo_v3.xml" #<--- MYRIAD
-    model_xml = "frozen_darknet_yolov3_tiny_model_CPU.xml"
+    model_xml = "frozen_darknet_yolov3_tiny_model_signals_CPU.xml"
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
 
 #    cap = cv2.VideoCapture(0)
@@ -160,9 +170,9 @@ def main_IE_infer():
     #print("videosFrameCount =", str(frame_count))
     #print("videosFPS =", str(vidfps))
 
-    #img = cv2.imread("images/5-1.jpg")
-    cam = cv2.VideoCapture(0)
-    s, img = cam.read()
+    img = cv2.imread("signals-dataset/yolov3/signal-1516.jpg")
+    #cam = cv2.VideoCapture(0)
+    #s, img = cam.read()
 
     time.sleep(1)
 
@@ -183,7 +193,7 @@ def main_IE_infer():
     prepimg = prepimg.transpose((0, 3, 1, 2))  # NHWC to NCHW
     outputs = exec_net.infer(inputs={input_blob: prepimg})
 
-    print(time.time() - start_time)
+    print('time taken: {}'.format(time.time() - start_time))
 
     objects = []
 
